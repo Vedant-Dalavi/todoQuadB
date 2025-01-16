@@ -27,7 +27,7 @@ const AddTask = () => {
             createdDate: new Date().toISOString(),
         };
 
-        dispatch(addTaskWithInsight(newTask));
+        dispatch(addTask(newTask));
         setTitle('');
         setDueDate('');
     };

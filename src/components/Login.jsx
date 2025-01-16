@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import night from "../assets/night.png";
+import day from "../assets/day.png";
+import { toggleDarkMode } from '../redux/slices/themeSlice';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -35,28 +38,38 @@ const Login = () => {
         }
     };
 
+    const dark = useSelector((state) => state.theme.darkMode);
+
     return (
-        <div className="min-h-screen w-full bg-gray-100 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <div className={`relative min-h-screen w-full  ${!dark ? "bg-gray-100" : "bg-[#232323] text-white"} flex items-center justify-center`}>
+            <div className='cursor-pointer absolute right-5 top-5'>
+
+                {
+                    dark == false ?
+                        <img src={night} width={24} height={24} alt="" loading='lazy' onClick={() => dispatch(toggleDarkMode())} /> : <img src={day} alt="" width={24} height={24} loading='lazy' onClick={() => dispatch(toggleDarkMode())} />
+                }
+            </div>
+
+            <div className={`${!dark ? "bg-gray-100" : "bg-[#2C2C2C] text-white"} p-8 rounded-lg shadow-md w-96`}>
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
                 <form onSubmit={handleLogin}>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Email:</label>
+                        <label className={`block text-sm font-medium ${dark ? "text-white" : "text-gray-700"}`}>Email:</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            className={`${dark && "bg-[#2F3630] text-white"} mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                             required
                         />
                     </div>
                     <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700">Password:</label>
+                        <label className={`block text-sm font-medium${dark ? "text-white" : "text-gray-700"}`}>Password:</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            className={`${dark && "bg-[#2F3630] text-white"} mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                             required
                         />
                     </div>
@@ -68,7 +81,7 @@ const Login = () => {
                         Login
                     </button>
                 </form>
-                <p className="mt-4 text-center text-sm text-gray-600">
+                <p className={`mt-4 text-center text-sm ${dark ? "text-white" : "text-gray-600"}`}>
                     Do not have an account?{' '}
                     <a href="/signup" className="text-blue-500 hover:underline">
                         Sign up
