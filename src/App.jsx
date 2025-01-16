@@ -6,7 +6,6 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/dashboard/Dashboard';
 import Login from './components/Login';
-import Signup from './components/Signup';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -33,7 +32,6 @@ export default function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>

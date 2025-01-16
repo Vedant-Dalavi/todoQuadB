@@ -13,10 +13,41 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // Predefined credentials
+    const predefinedCredentials = {
+        email: 'test@example.com',
+        password: 'password123',
+        name: 'Test User', // Name of the predefined user
+    };
+
+    // Function to copy text to clipboard
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                alert(`${text} copied to clipboard!`);
+            })
+            .catch((err) => {
+                console.error('Failed to copy:', err);
+            });
+    };
+
     const handleLogin = (e) => {
         e.preventDefault();
 
-        // Retrieve users from localStorage
+        // Check if the entered credentials match the predefined credentials
+        if (email === predefinedCredentials.email && password === predefinedCredentials.password) {
+            // Save the predefined user in localStorage
+            localStorage.setItem('loggedInUser', JSON.stringify(predefinedCredentials));
+
+            // Update Redux state
+            dispatch(login({ email: predefinedCredentials.email, name: predefinedCredentials.name }));
+
+            // Redirect to dashboard
+            navigate('/');
+            return; // Exit the function early
+        }
+
+        // If not predefined, check localStorage for other users
         const users = JSON.parse(localStorage.getItem('users')) || [];
 
         // Find the user with matching email and password
@@ -43,10 +74,9 @@ const Login = () => {
     return (
         <div className={`relative min-h-screen w-full  ${!dark ? "bg-gray-100" : "bg-[#232323] text-white"} flex items-center justify-center`}>
             <div className='cursor-pointer absolute right-5 top-5'>
-
-                {
-                    dark == false ?
-                        <img src={night} width={24} height={24} alt="" loading='lazy' onClick={() => dispatch(toggleDarkMode())} /> : <img src={day} alt="" width={24} height={24} loading='lazy' onClick={() => dispatch(toggleDarkMode())} />
+                {dark == false ?
+                    <img src={night} width={24} height={24} alt="" loading='lazy' onClick={() => dispatch(toggleDarkMode())} /> :
+                    <img src={day} alt="" width={24} height={24} loading='lazy' onClick={() => dispatch(toggleDarkMode())} />
                 }
             </div>
 
@@ -81,11 +111,25 @@ const Login = () => {
                         Login
                     </button>
                 </form>
-                <p className={`mt-4 text-center text-sm ${dark ? "text-white" : "text-gray-600"}`}>
-                    Do not have an account?{' '}
-                    <a href="/signup" className="text-blue-500 hover:underline">
-                        Sign up
-                    </a>
+                <p className={`mt-4 text-center flex flex-col items-start text-sm ${dark ? "text-white" : "text-gray-600"}`}>
+                    <p>
+                        Email:{' '}
+                        <span
+                            className='font-semibold cursor-pointer hover:underline'
+                            onClick={() => copyToClipboard(predefinedCredentials.email)}
+                        >
+                            {predefinedCredentials.email}
+                        </span>
+                    </p>
+                    <p>
+                        Password:{' '}
+                        <span
+                            className='font-semibold cursor-pointer hover:underline'
+                            onClick={() => copyToClipboard(predefinedCredentials.password)}
+                        >
+                            {predefinedCredentials.password}
+                        </span>
+                    </p>
                 </p>
             </div>
         </div>
