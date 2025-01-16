@@ -16,12 +16,23 @@ const ShowPendingTasks = ({ tasks }) => {
 
                     {!task.completed && (
                         <div className="flex justify-between py-4 border-t-2 border-[#496E4B33]">
-                            <div className="flex gap-x-2 cursor-pointer">
-                                <div onClick={() => dispatch(updateTask(task))} >
+                            <div className="flex gap-x-6">
+                                <div className="flex gap-x-2 cursor-pointer">
 
-                                    <CheckBoxOutlineBlankSharp />
+                                    <div onClick={() => dispatch(updateTask(task))} >
+
+                                        <CheckBoxOutlineBlankSharp />
+                                    </div>
+                                    <p onClick={() => dispatch(setOpenTask(task))}>{task.title}</p>
                                 </div>
-                                <p onClick={() => dispatch(setOpenTask(task))}>{task.title}</p>
+
+                                {
+                                    task.note && (
+                                        <div>
+                                            Note: {task.note}
+                                        </div>
+                                    )
+                                }
                             </div>
 
                             <div onClick={() => dispatch(favorite(task))} className="cursor-pointer">

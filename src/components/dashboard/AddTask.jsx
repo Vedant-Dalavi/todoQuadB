@@ -2,13 +2,13 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTask, addTaskWithInsight } from '../../redux/slices/taskSlice';
+import { addTask } from '../../redux/slices/taskSlice';
 
 
 const AddTask = () => {
 
     const [title, setTitle] = useState('');
-    const [dueDate, setDueDate] = useState(null);
+    const [dueDate, setDueDate] = useState('');
     const dispatch = useDispatch();
 
     const handleAddTask = () => {

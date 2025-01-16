@@ -1,9 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
 
-// API Configuration
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-const GEMINI_API_KEY = "AIzaSyAZJzF2IDCvYK_amIZmVGx-TwAS7nFr92o"; // Replace with your API key
 
 // Function to save tasks to localStorage
 const saveTasksToLocalStorage = (tasks) => {
@@ -23,79 +19,14 @@ const initialState = {
     error: null,
 };
 
-// Thunk to fetch insights and add a task
-export const addTaskWithInsight = createAsyncThunk(
-    'tasks/addTaskWithInsight',
-    async (task, { rejectWithValue }) => {
-        try {
-            // API call to fetch insights
-            console.log("before insert", task)
-            const response = await axios.post(
-                `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
-                {
-                    "contents": [
-                        {
-                            "parts": [{ "text": `How i can complete this task = ${task.title}, give smaller steps to complete this task` }], // Use the task title for insights
-                        },
-                    ],
-                },
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-
-            // Extract insight from the response
-            const insight = response.data?.candidates[0].content?.[0]?.parts?.[0]?.text || 'No insight available';
-            console.log(response)
-            // Return the task with the fetched insight added to the `note` field
-            return {
-                ...task,
-                note: insight, // Add the insight to the `note` field
-                id: Date.now(),
-                completed: false,
-                important: false,
-                reminder: "",
-                repeat: "None",
-                steps: [],
-                createdDate: new Date().toISOString(),
-            };
-        } catch (error) {
-            console.error('Error fetching insight:', error);
-            return rejectWithValue('Failed to fetch task insights');
-        }
-    }
-);
 
 // Task slice
 const taskSlice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        fetchTasksStart: (state) => {
-            state.loading = true;
-            state.error = null;
-        },
-        fetchTasksSuccess: (state, action) => {
-            state.loading = false;
-            state.tasks = action.payload;
-            saveTasksToLocalStorage(state.tasks); // Save to localStorage
-        },
-        fetchTasksFailure: (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        },
         addTask: (state, action) => {
-            const newTask = {
-                ...action.payload,
-                id: Date.now(),
-                completed: false,
-                important: false,
-                reminder: "",
-                repeat: "None",
-                steps: [],
-                createdDate: new Date().toISOString(),
-            };
-            state.tasks.push(newTask); // Add task to the state
+            state.tasks.push(action.payload); // Add task to the state
             saveTasksToLocalStorage(state.tasks); // Save to localStorage
         },
         updateTask: (state, action) => {
@@ -141,31 +72,37 @@ const taskSlice = createSlice({
                 saveTasksToLocalStorage(state.tasks); // Save to localStorage
             }
         },
-    },
-    extraReducers: (builder) => {
-        // Handle addTaskWithInsight
-        builder
-            .addCase(addTaskWithInsight.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(addTaskWithInsight.fulfilled, (state, action) => {
-                state.loading = false;
-                state.tasks.push(action.payload); // Add the task with insight
-                saveTasksToLocalStorage(state.tasks); // Save to localStorage
-            })
-            .addCase(addTaskWithInsight.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            });
+        updateDueDate: (state, action) => {
+
+            console.log("**************************", action.payload.toISOString().split('T')[0])
+
+            if (state.openTask) {
+                const index = state.tasks.findIndex((task) => task.id === state.openTask.id);
+
+                state.openTask.dueDate = action.payload.toISOString().split('T')[0];
+                state.tasks[index].dueDate = action.payload.toISOString().split('T')[0];
+
+                localStorage.setItem('openTask', JSON.stringify(state.openTask));
+                saveTasksToLocalStorage(state.tasks);
+            }
+        },
+
+        addNote: (state, action) => {
+            if (state.openTask) {
+                const index = state.tasks.findIndex((task) => task.id === state.openTask.id);
+
+                state.openTask.note = action.payload;
+                state.tasks[index].note = action.payload;
+
+                localStorage.setItem('openTask', JSON.stringify(state.openTask));
+                saveTasksToLocalStorage(state.tasks);
+            }
+        }
     },
 });
 
 // Export actions
 export const {
-    fetchTasksStart,
-    fetchTasksSuccess,
-    fetchTasksFailure,
     addTask,
     updateTask,
     setOpenTask,
@@ -173,6 +110,8 @@ export const {
     deleteTask,
     toggleSidebar,
     favorite,
+    updateDueDate,
+    addNote
 } = taskSlice.actions;
 
 // Export reducer

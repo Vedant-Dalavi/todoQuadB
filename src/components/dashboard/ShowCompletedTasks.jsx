@@ -24,6 +24,14 @@ const ShowCompletedTasks = ({ tasks }) => {
                                 <p onClick={() => dispatch(setOpenTask(task))} ><strike>{task.title}</strike></p>
                             </div>
 
+                            {
+                                task.note && (
+                                    <div>
+                                        Note: {task.note}
+                                    </div>
+                                )
+                            }
+
                             <div onClick={() => dispatch(favorite(task))} className="cursor-pointer">
                                 {task.important == true ? <Star /> : <StarOutline />}
                             </div>
