@@ -78,8 +78,8 @@ const OpenTask = ({ task }) => {
                     <p>Set Reminder</p>
                 </div>
 
-                <div onClick={() => setOpen(!isOpen)} className={`flex ${isOpen && "flex-col"} gap-x-2 gap-y-2 py-4 pr-10 border-t-2 border-[#496E4B33]`}>
-                    <div className="flex gap-x-2 cursor-pointer">
+                <div className={`flex ${isOpen && "flex-col"} gap-x-2 gap-y-2 py-4 pr-10 border-t-2 border-[#496E4B33]`}>
+                    <div className="flex gap-x-2 cursor-pointer" onClick={() => setOpen(!isOpen)}>
                         <CalendarIcon />
                         {task.dueDate == '' ? (<p>Add Due Date</p>) : (<p>Due: {task.dueDate}</p>)}
                     </div>
@@ -109,7 +109,7 @@ const OpenTask = ({ task }) => {
             </div>
 
             {/* Close and Delete Section */}
-            <div className={`flex justify-between items-center px-4 py-4 border-t-2 border-[#496E4B33] fixed bottom-0 w-[26%] right-0 ${!dark ? "bg-[#EEF6EF]" : "bg-[#2C2C2C]"}`}>
+            <div className={`flex justify-between items-center px-4 py-5 border-t-2 border-[#496E4B33]  fixed bottom-0 w-[26%] right-0 ${!dark ? "bg-[#EEF6EF]" : "bg-[#2C2C2C]"}`}>
                 <div onClick={() => dispatch(closeOpenTask())} className="cursor-pointer">
                     <CloseOutlined />
                 </div>

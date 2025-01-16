@@ -13,7 +13,7 @@ const Dashboard = () => {
 
 
     return (
-        <div className={`w-full flex ${!toggle && "pl-12"} ${openedTask ? "flex-row gap-x-2" : "flex-col pr-12"} gap-y-2 `}>
+        <div className={`w-full flex ${!toggle && "pl-12"} ${openedTask ? "flex-row gap-x-2" : "flex-col pr-12"} gap-y-2`}>
             <div className="w-full">
                 <div className="flex gap-x-2 items-center">
                     <p>To Do</p>

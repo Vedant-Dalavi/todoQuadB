@@ -23,7 +23,7 @@ const Sidebar = () => {
 
             {
                 toggle && (
-                    <div className={`absolute z-40 top  ${!dark ? "bg-white" : "bg-[#232323]"}  top-32 w-48`}>
+                    <div className={`absolute z-40  ${!dark ? "bg-white" : "bg-[#232323]"}  top-44 w-48`}>
 
                         <p className="border-t-2 px-2 py-3">
                             My Profile

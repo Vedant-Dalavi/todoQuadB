@@ -25,7 +25,7 @@ export default function App() {
   const dark = useSelector((state) => state.theme.darkMode)
 
   return (
-    <div className={`overflow-auto scrollbar-hide ${!dark ? "bg-[#FBFDFC] " : "dark:bg-[#242424] dark:text-white"} `}>
+    <div className={`overflow-y-scroll scrollbar-hide ${!dark ? "bg-[#FBFDFC] " : "dark:bg-[#242424] dark:text-white"} `}>
       {isAuthenticated && <Navbar />}
       <div className="flex flex-row justify-between gap-x-5">
         {isAuthenticated && toggle && <Sidebar />}
